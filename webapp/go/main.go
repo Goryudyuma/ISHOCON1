@@ -16,12 +16,19 @@ import (
 
 var db *sql.DB
 
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
 func main() {
 	// database setting
-	user := os.Getenv("ISHOCON1_DB_USER")
-	pass := os.Getenv("ISHOCON1_DB_PASSWORD")
-	dbname := os.Getenv("ISHOCON1_DB_NAME")
-	db, _ = sql.Open("mysql", user+":"+pass+"@/"+dbname)
+	user := getEnv("ISHOCON1_DB_USER", "ishocon")
+	pass := getEnv("ISHOCON1_DB_PASSWORD", "ishocon")
+	dbname := getEnv("ISHOCON1_DB_NAME", "ishocon1")
+	db, _ := sql.Open("mysql", user+":"+pass+"@/"+dbname)
 	db.SetMaxIdleConns(5)
 
 	r := gin.Default()
